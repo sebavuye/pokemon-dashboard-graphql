@@ -1,13 +1,30 @@
-import Button from "@mui/material/Button";
+import { gql, useQuery } from "@apollo/client";
 
-function ButtonUsage() {
-  return <Button variant="contained">Hello world</Button>;
-}
+const GET_POKEMONS = gql`
+  query getPokemons {
+    pokemons {
+      count
+      next
+      previous
+      status
+      message
+      results {
+        url
+        name
+        image
+      }
+    }
+  }
+`;
 
 function App() {
+  const { data } = useQuery(GET_POKEMONS);
+
   return (
     <div>
-      <ButtonUsage />
+      {data?.pokemons.results.map((pokemon: any) => {
+        return <div key={pokemon.name}>{pokemon.name}</div>;
+      })}
     </div>
   );
 }
