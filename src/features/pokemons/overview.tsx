@@ -49,7 +49,7 @@ export const Overview = () => {
         {data?.pokemons?.results?.map((pokemon) => (
           <Link key={pokemon?.name} to={`pokemon/${pokemon?.name}`}>
             <Card sx={{ display: "flex" }}>
-              <CardMedia component="img" image={pokemon?.image ?? undefined} alt={pokemon?.name ?? undefined} sx={{ maxHeight: "100px", objectFit: "contain" }} />
+              <CardMedia component="img" image={pokemon?.image ?? undefined} alt={pokemon?.name ?? undefined} sx={{ minHeight: "100px", maxHeight: "100px", objectFit: "contain" }} />
               <CardContent sx={{ flex: "1 0 auto", alignItems: "center", width: "60%", display: "flex" }}>
                 <Typography gutterBottom variant="h6" component="div" mb={0}>
                   {pokemon?.name}
