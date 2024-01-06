@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./app.tsx";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloProvider, defaultDataIdFromObject, InMemoryCache } from "@apollo/client";
 import { Detail, Overview } from "./features";
 import "./main.css";
 
@@ -12,7 +12,17 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-const client = new ApolloClient({ uri: "https://graphql-pokeapi.vercel.app/api/graphql", cache: new InMemoryCache() });
+const client = new ApolloClient({
+  uri: "https://graphql-pokeapi.vercel.app/api/graphql",
+  cache: new InMemoryCache({
+    dataIdFromObject(responseObject) {
+      if (responseObject.__typename === "PokemonList") {
+        return `PokemonList:${responseObject.nextOffset}`;
+      }
+      return defaultDataIdFromObject(responseObject);
+    },
+  }),
+});
 
 const router = createBrowserRouter([
   {

@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useFragment, useQuery } from "@apollo/client";
 import { gql } from "../../__generated__";
 import { Link, useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
@@ -16,6 +16,9 @@ query pokemons($limit: Int, $offset: Int) {
     count
     status
     message
+    next
+    previous
+    nextOffset
     results {
       url
       name
@@ -24,22 +27,32 @@ query pokemons($limit: Int, $offset: Int) {
   }
 }`);
 
+const COUNT_FRAGMENT = gql(`
+  fragment count on PokemonList {
+    count
+}
+`);
+
 const LIMIT = 24;
 const skeletons = Array.from({ length: LIMIT }, (_, key) => key);
 
 export const Overview = () => {
-  const client = useApolloClient();
-  // there is a better way, investigate
-  const cache = client.readQuery({
-    query: GET_POKEMONS,
-    variables: { limit: LIMIT, offset: 0 },
-  });
-
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const page = parseInt(query.get("page") ?? "1", 10);
 
   const { data, loading } = useQuery(GET_POKEMONS, { variables: { limit: LIMIT, offset: (page - 1) * LIMIT } });
+  const { data: countFragment } = useFragment({
+    fragmentName: "count",
+    fragment: COUNT_FRAGMENT,
+    from: {
+      __typename: "PokemonList",
+      nextOffset: 24,
+    },
+  });
+
+  const count = data?.pokemons?.count;
+  const cachedCount = countFragment?.count;
 
   return (
     <>
@@ -65,7 +78,7 @@ export const Overview = () => {
       <Box display="flex" justifyContent="center" p={2}>
         <Pagination
           page={page}
-          count={Math.ceil((cache?.pokemons?.count ?? data?.pokemons?.count ?? 0) / 24)}
+          count={Math.ceil((cachedCount ?? count ?? 0) / LIMIT)}
           renderItem={(item) => {
             return <PaginationItem component={Link} to={`?page=${item.page}`} {...item} />;
           }}
