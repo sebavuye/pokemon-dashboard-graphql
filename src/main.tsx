@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Detail, Overview } from "./features";
+import "./main.css";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -26,9 +27,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <CssBaseline />
     <ApolloProvider client={client}>
       <RouterProvider router={router} />
-      <CssBaseline />
     </ApolloProvider>
   </React.StrictMode>,
 );
