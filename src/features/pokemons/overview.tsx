@@ -6,9 +6,9 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useApolloClient, useQuery } from "@apollo/client";
 import { gql } from "../../__generated__";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
-import { useState } from "react";
+import PaginationItem from "@mui/material/PaginationItem";
 
 const GET_POKEMONS = gql(`
 query pokemons($limit: Int, $offset: Int) {
@@ -25,7 +25,6 @@ query pokemons($limit: Int, $offset: Int) {
 }`);
 
 const LIMIT = 24;
-
 const skeletons = Array.from({ length: LIMIT }, (_, key) => key);
 
 export const Overview = () => {
@@ -36,7 +35,10 @@ export const Overview = () => {
     variables: { limit: LIMIT, offset: 0 },
   });
 
-  const [page, setPage] = useState(1);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const page = parseInt(query.get("page") ?? "1", 10);
+
   const { data, loading } = useQuery(GET_POKEMONS, { variables: { limit: LIMIT, offset: (page - 1) * LIMIT } });
 
   return (
@@ -64,9 +66,8 @@ export const Overview = () => {
         <Pagination
           page={page}
           count={Math.ceil((cache?.pokemons?.count ?? data?.pokemons?.count ?? 0) / 24)}
-          color="primary"
-          onChange={(_event, value) => {
-            setPage(value);
+          renderItem={(item) => {
+            return <PaginationItem component={Link} to={`?page=${item.page}`} {...item} />;
           }}
         />
       </Box>
