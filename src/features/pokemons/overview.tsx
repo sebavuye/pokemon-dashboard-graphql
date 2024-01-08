@@ -9,6 +9,7 @@ import { gql } from "../../__generated__";
 import { Link, useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
+import { capitalize } from "../../utils";
 
 const GET_POKEMONS = gql(`
 query pokemons($limit: Int, $offset: Int) {
@@ -67,7 +68,7 @@ export const Overview = () => {
               <CardMedia component="img" image={pokemon?.image ?? undefined} alt={pokemon?.name ?? undefined} sx={{ minHeight: "100px", maxHeight: "100px", objectFit: "contain" }} />
               <CardContent sx={{ flex: "1 0 auto", alignItems: "center", width: "60%", display: "flex" }}>
                 <Typography gutterBottom variant="h6" component="div" mb={0}>
-                  {pokemon?.name}
+                  {capitalize(pokemon?.name ?? "")}
                 </Typography>
               </CardContent>
             </Card>
