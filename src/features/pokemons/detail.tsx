@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { gql } from "../../__generated__";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
@@ -13,6 +13,8 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
+import { Button } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 
 const GET_POKEMON = gql(`
 query pokemon($name: String!) {
@@ -48,6 +50,7 @@ query pokemon($name: String!) {
 export const Detail = () => {
   const { name = "" } = useParams();
   const { data, loading } = useQuery(GET_POKEMON, { variables: { name } });
+  const navigate = useNavigate();
 
   return (
     <Box p={4} display="flex" justifyContent="center">
@@ -91,6 +94,17 @@ export const Detail = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+              </Box>
+              <Box mt={5}>
+                <Button
+                  startIcon={<ArrowBack />}
+                  variant="contained"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  Back to overview
+                </Button>
               </Box>
             </Box>
             <Box width="100%" height="100%">
