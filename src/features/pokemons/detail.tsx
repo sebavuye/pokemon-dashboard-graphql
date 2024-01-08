@@ -14,7 +14,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import { Button } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Add, ArrowBack } from "@mui/icons-material";
 
 const GET_POKEMON = gql(`
 query pokemon($name: String!) {
@@ -95,7 +95,7 @@ export const Detail = () => {
                   </Table>
                 </TableContainer>
               </Box>
-              <Box mt={5}>
+              <Box mt={5} display="flex" justifyContent="space-between">
                 <Button
                   startIcon={<ArrowBack />}
                   variant="contained"
@@ -104,6 +104,9 @@ export const Detail = () => {
                   }}
                 >
                   Back to overview
+                </Button>
+                <Button variant="contained" color="success" endIcon={<Add />}>
+                  Add to Pokedex
                 </Button>
               </Box>
             </Box>
